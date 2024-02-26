@@ -15,8 +15,11 @@ from core.models import (
     Tag,
 )
 
-from recipe.serializers import RecipeSerializer
 
+from recipe.serializers import (
+    RecipeSerializer,
+    RecipeDetailSerializer,
+)
 
 RECIPES_URL = reverse('recipe:recipe-list')
 
@@ -65,6 +68,7 @@ class PrivateRecipeApiTests(TestCase):
             'user@example.com',
             'testpass123',
         )
+        self.user = create_user(email='user1@example.com', password='test123')
         self.client.force_authenticate(self.user)
 
     def test_retrieve_recipes(self):
@@ -85,6 +89,7 @@ class PrivateRecipeApiTests(TestCase):
             'other@example.com',
             'password123',
         )
+        other_user = create_user(email='other1@example.com', password='test123')
         create_recipe(user=other_user)
         create_recipe(user=self.user)
 
@@ -103,7 +108,8 @@ class PrivateRecipeApiTests(TestCase):
             'price': Decimal('5.99'),
         }
         res = self.client.post(RECIPES_URL, payload)
-
+        if res.status_code!=status.HTTP_201_CREATED:
+            print(res.data)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         recipe = Recipe.objects.get(id=res.data['id'])
         for k, v in payload.items():
