@@ -14,6 +14,15 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
         read_only_fields = ['id']
 
+
+class IngredientSerializer(serializers.ModelSerializer):
+    """Serializer for ingredients."""
+
+    class Meta:
+        model = Ingredient
+        fields = ['id', 'name']
+        read_only_fields = ['id']
+
 class RecipeSerializer(serializers.ModelSerializer):
     """Serializer for recipes."""
     tags = TagSerializer(many=True, required=False)
@@ -83,11 +92,11 @@ class RecipeDetailSerializer(RecipeSerializer):
         fields = RecipeSerializer.Meta.fields + ['description']
 
 
-class IngredientSerializer(serializers.ModelSerializer):
-    """Serializer for ingredients."""
-
-    class Meta:
-        model = Ingredient
-        fields = ['id', 'name']
-        read_only_fields = ['id']
-
+# class RecipeImageSerializer(serializers.ModelSerializer):
+#     """Serializer for uploading images to recipes."""
+#
+#     class Meta:
+#         model = Recipe
+#         fields = ['id', 'image']
+#         read_only_fields = ['id']
+#         extra_kwargs = {'image': {'required': 'True'}}
